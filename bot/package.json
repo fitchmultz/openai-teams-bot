@@ -24,7 +24,7 @@
     "openai": "^4.24.7"
   },
   "devDependencies": {
-    "@types/restify": "8.4.2",
+    "@types/restify": "8.5.12",
     "env-cmd": "^10.1.0",
     "nodemon": "^2.0.7",
     "shx": "^0.3.3",
