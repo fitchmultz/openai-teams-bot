@@ -35,6 +35,7 @@ export class TeamsBot extends TeamsActivityHandler {
     
       // Send the response back to the user as a reply to the specific message
       if (completion.choices && completion.choices.length > 0) {
+        // await context.sendActivity(completion.choices[0].message.content.trim());
         const reply = MessageFactory.text(completion.choices[0].message.content.trim());
         reply.replyToId = context.activity.replyToId || context.activity.id;
         await context.sendActivity(reply);
