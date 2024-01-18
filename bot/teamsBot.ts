@@ -29,7 +29,7 @@ export class TeamsBot extends TeamsActivityHandler {
         txt = removedMentionText.toLowerCase().replace(/\n|\r/g, "").trim();
       }
 
-      const response = await openai.createCompletion({
+      const completion = await openai.chat.completions.create({
         model: "gpt-4-1106-preview",
         prompt: txt,
         temperature: 0,
