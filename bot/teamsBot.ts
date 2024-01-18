@@ -2,22 +2,20 @@ import {
   TeamsActivityHandler,
   CardFactory,
   TurnContext,
-  AdaptiveCardInvokeValue,
-  AdaptiveCardInvokeResponse,
 } from "botbuilder";
 import rawWelcomeCard from "./adaptiveCards/welcome.json";
 import { AdaptiveCards } from "@microsoft/adaptivecards-tools";
-import { Configuration, OpenAIApi } from "openai";
+import OpenAI from "openai";
 import config from "./config";
 
 export class TeamsBot extends TeamsActivityHandler {
+  private openai: OpenAI;
+
   constructor() {
     super();
 
-    const configuration = new Configuration({
-      apiKey: config.openaiApiKey,
-    });
-    const openai = new OpenAIApi(configuration);
+    // Initialize OpenAI API
+    this.openai = new OpenAI({ apiKey: config.openaiApiKey });
 
     this.onMessage(async (context, next) => {
       console.log("Running with Message Activity.");
@@ -25,20 +23,20 @@ export class TeamsBot extends TeamsActivityHandler {
       let txt = context.activity.text;
       const removedMentionText = TurnContext.removeRecipientMention(context.activity);
       if (removedMentionText) {
-        // Remove the line break
         txt = removedMentionText.toLowerCase().replace(/\n|\r/g, "").trim();
       }
 
-      const completion = await openai.chat.completions.create({
+      // Use OpenAI to generate a response
+      const completion = await this.openai.chat.completions.create({
+        messages: [{ role: "user", content: txt }],
         model: "gpt-4-1106-preview",
-        prompt: txt,
-        temperature: 0,
-        max_tokens: 2048,
       });
 
-      await context.sendActivity(response.data.choices[0].text);
+      // Send the response back to the user
+      if (completion.choices && completion.choices.length > 0) {
+        await context.sendActivity(completion.choices[0].message.content.trim());
+      }
 
-      // By calling next() you ensure that the next BotHandler is run.
       await next();
     });
 
