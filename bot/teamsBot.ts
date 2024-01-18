@@ -30,7 +30,7 @@ export class TeamsBot extends TeamsActivityHandler {
       }
 
       const response = await openai.createCompletion({
-        model: "text-davinci-003",
+        model: "gpt-4-1106-preview",
         prompt: txt,
         temperature: 0,
         max_tokens: 2048,

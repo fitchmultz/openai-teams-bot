@@ -2,7 +2,7 @@
 node_modules/
 
 # misc
-.env
+.env*
 .deployment
 .DS_Store
 
